@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public abstract class ShoppingCartServiceImpl implements ShoppingCartService {
+public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final Cart cart;
     private final ProductRepository productRepository;
@@ -61,7 +61,7 @@ public abstract class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void addProduct(String productName) throws NoSuchProductException {
+    public void addProduct(String productName, int quantity) throws NoSuchProductException {
         Product productToAdd = productRepository.findAllProducts()
                 .stream()
                 .filter(product -> product.name().equals(productName))
@@ -91,94 +91,10 @@ public abstract class ShoppingCartServiceImpl implements ShoppingCartService {
         observers.add(observer);
         log.info("Observer subscribed: {}", observer.getClass().getSimpleName());
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   /* @Autowired
-    public ShoppingCartServiceImpl(Cart cart, ProductRepository productRepository, OrderRepository orderRepository, List<Observer> observers) {
-        this.cart = cart;
-        this.productRepository = productRepository;
-        this.orderRepository = orderRepository;
-        this.observers.addAll(observers);
-    }
-
-    @PreDestroy
-    public void cleanUp() {
-        log.info("CleanUp shopping cart.");
-    }
-
-    @Override
-    public void order() {
-        double totalPrice = getTotalPrice();  // Összár kiszámítása
-        orderRepository.saveOrder(cart);
-        for (Observer observer : observers) {
-            observer.notify(cart);
-        }
-        cart.clearCart();
-        log.info("Order placed and cart cleared. Total price: {}", totalPrice);
-        System.out.println("Order placed successfully. Total price: " + totalPrice);
-    }
-
-    @Override
-    public double getTotalPrice() {
-        return cart.getProducts().stream().mapToDouble(Product::getPrice).sum();
-    }
-
-    @Override
-    public void addProduct(String productName, int quantity) throws NoSuchProductException {
-        Product productToAdd = productRepository.getAllProducts()
-                .stream()
-                .filter(product -> product.name().equals(productName))
-                .findFirst()
-                .orElseThrow(NoSuchProductException::new);
-
-        productToAdd.purchaseTickets(quantity);
-        cart.addProduct(productToAdd);
-        log.info("Added product to cart: {} (quantity: {})", productName, quantity);
-    }
-
-    @Override
-    public List<Product> getProductsFromCart() {
-        return cart.getProducts();
-    }
-
-    @Override
-    public void removeProduct(Product productToRemove) {
-        cart.removeProduct(productToRemove);
-        log.info("Removed product from cart: {}", productToRemove.name());
-    }
-
-    @Override
-    public void subscribe(Observer observer) {
-        observers.add(observer);
-        log.info("Observer subscribed: {}", observer.getClass().getSimpleName());
-    }
 
     @Override
     public void listProducts() {
-        List<Product> products = productRepository.findAllProducts();
-        log.info("Available products:");
-        for (Product product : products) {
-            log.info("{} | Id: {} | Section: {} | Date: {} | Available: {} | Price: {}",
-                    product.id(),
-                    product.name(),
-                    product.sector(),
-                    product.date(),
-                    product.AvailableTickets(),
-                    product.price());
-        }
+
     }
-}*/
+}
+

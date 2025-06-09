@@ -3,16 +3,14 @@ package org.example.cart;
 import org.example.exception.NoSuchProductException;
 import org.example.model.Product;
 import org.example.orderconfirm.Observer;
-import org.example.orderconfirm.Observable;
-import org.example.model.Product;
 
 
 import java.util.List;
 
-public abstract interface ShoppingCartService extends Observable {
+public interface ShoppingCartService {
     void order();
     double getTotalPrice();
-    void addProduct(String productName) throws NoSuchProductException;
+    void addProduct(String productName, int quantity) throws NoSuchProductException;
     List<Product> getProductsFromCart();
     void removeProduct(Product productToRemove);
     void subscribe(Observer observer);
