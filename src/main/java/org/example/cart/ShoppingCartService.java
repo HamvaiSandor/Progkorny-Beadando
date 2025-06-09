@@ -12,7 +12,7 @@ import java.util.List;
 public abstract interface ShoppingCartService extends Observable {
     void order();
     double getTotalPrice();
-    void addProduct(String productName) throws NoSuchProductException;
+    void addProduct(String productName, int quantity) throws NoSuchProductException;
     List<Product> getProductsFromCart();
     void removeProduct(Product productToRemove);
     void subscribe(Observer observer);

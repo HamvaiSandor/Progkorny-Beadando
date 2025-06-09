@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public abstract class ShoppingCartServiceImpl implements ShoppingCartService {
+public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final Cart cart;
     private final ProductRepository productRepository;
@@ -60,7 +60,6 @@ public abstract class ShoppingCartServiceImpl implements ShoppingCartService {
         cart.clearCart();
     }
 
-    @Override
     public void addProduct(String productName) throws NoSuchProductException {
         Product productToAdd = productRepository.findAllProducts()
                 .stream()
@@ -69,6 +68,12 @@ public abstract class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseThrow(NoSuchProductException::new);
         cart.addProduct(productToAdd);
         log.info("Added product to cart: {}", productName);
+    }
+
+    @Override
+    public void listProducts() {
+        cart.getProducts().forEach(product ->
+                log.info("Product: {} - Price: {}", product.name(), product.price()));
     }
 
     @Override
@@ -84,6 +89,11 @@ public abstract class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public double getTotalPrice() {
         return cart.getProducts().stream().mapToDouble(Product::price).sum();
+    }
+
+    @Override
+    public void addProduct(String productName, int quantity) throws NoSuchProductException {
+
     }
 
     @Override
