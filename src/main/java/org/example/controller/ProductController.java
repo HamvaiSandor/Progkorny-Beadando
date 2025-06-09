@@ -47,4 +47,17 @@ public class ProductController {
         model.addAttribute("products", products);
         return "products/list";
     }
+
+    @GetMapping("/create")
+    public String showAddProductForm(Model model) {
+        model.addAttribute("product", new SimpleProduct(0l, "2025.04.01", "Enter the product name!", "B", 55, 4500.0));
+        return "products/create";
+    }
+
+    @PostMapping("/create")
+    public String addProduct(Model model, @ModelAttribute("product") SimpleProduct simpleProduct) {
+        Product product = new SimpleProduct(simpleProduct.id(), simpleProduct.date(), simpleProduct.name(), simpleProduct.sector(), simpleProduct.AvailableTickets(), simpleProduct.price());
+        productRepository.saveProduct(product);
+        return "redirect:/products/list";
+    }
 }

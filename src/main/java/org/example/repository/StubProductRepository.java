@@ -64,7 +64,7 @@ public class StubProductRepository implements ProductRepository {
     }
 
     private long generateNextId() {
-        return products.stream().mapToLong(Product::id).max().orElse(0L);
+        return products.stream().mapToLong(Product::id).max().orElse(0L) + 1;
     }
 
 }
