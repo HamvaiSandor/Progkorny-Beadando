@@ -94,7 +94,5 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void listProducts() {
-
     }
 }
-

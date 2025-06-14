@@ -16,4 +16,3 @@ public interface ShoppingCartService {
     void subscribe(Observer observer);
     void listProducts();
 }
-
