@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8" />
+    <title>Esemény létrehozása</title>
+</head>
+<body>
+<h2>Esemény létrehozása</h2>
+<form id="createForm">
+    <label>
+        Név: <input type="text" id="name" required />
+    </label><br />
+    <label>
+        Szekció: <input type="text" id="sector" required />
+    </label><br />
+    <label>
+        Dátum: <input type="date" id="date" required />
+    </label><br />
+    <label>
+        Elérhető jegyek: <input type="number" id="availableTickets" min="0" required />
+    </label><br />
+    <label>
+        Ár (Ft): <input type="number" id="price" min="0" step="0.01" required />
+    </label><br />
+    <button type="submit">Esemény hozzáadása</button>
+</form>
+
+<script>
+    const form = document.getElementById('createForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const eventData = {
+        name: document.getElementById('name').value,
+        sector: document.getElementById('sector').value,
+        date: document.getElementById('date').value,
+        availableTickets: parseInt(document.getElementById('availableTickets').value, 10),
+        price: parseFloat(document.getElementById('price').value)
+      };
+
+      try {
+        const response = await fetch('/api/events', {  // Backend API végpont (példa)
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eventData)
+        });
+
+        if (response.ok) {
+          alert('Esemény sikeresen hozzáadva!');
+          form.reset();
+        } else {
+          alert('Hiba az esemény hozzáadásakor!');
+        }
+      } catch (error) {
+        alert('Hálózati hiba!');
+        console.error(error);
+      }
+    });
+</script>
+</body>
+</html>

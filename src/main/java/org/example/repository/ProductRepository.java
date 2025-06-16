@@ -1,18 +1,10 @@
 package org.example.repository;
 
-import org.example.model.Product;
+import org.example.model.SimpleProduct;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface ProductRepository {
-
-    List<Product> findAllProducts();
-
-    Product saveProduct(Product product);
-
-    Product findProduct(Long id);
-
-    Product updateProduct(Long id, Product productDetails);
-
-    void deleteProduct(Long id);
+@Repository
+public interface ProductRepository extends JpaRepository<SimpleProduct, Long> {
+    // pl. Optional<SimpleProduct> findByName(String name); ha kell
 }

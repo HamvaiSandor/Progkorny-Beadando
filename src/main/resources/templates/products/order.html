@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Products</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5 mb-4">Order Products</h1>
+    <form id="orderForm">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Sector</th>
+                <th>Date</th>
+                <th>Available Tickets</th>
+                <th>Price</th>
+                <th>Quantity to Order</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.id}">1</td>
+                <td th:text="${product.name}">Product Name</td>
+                <td th:text="${product.sector}">Sector</td>
+                <td th:text="${product.date}">Date</td>
+                <td th:text="${product.availableTickets}">0</td>
+                <td th:text="${product.price}">0.0</td>
+                <td>
+                    <input type="number" min="0" th:id="'qty-' + ${product.id}" th:name="'qty-' + ${product.id}"
+                           style="width: 70px;" />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="text-right">
+            <button type="button" id="submitOrder" class="btn btn-success">Place Order</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#submitOrder').click(function () {
+            let orders = [];
+
+            /* Bejárjuk a sorokat és összegyűjtjük a rendelni kívánt mennyiséget */
+            $('tbody tr').each(function () {
+                let id = $(this).find('td:first').text().trim();
+                let quantity = $(this).find('input[type=number]').val();
+
+                if (quantity && quantity > 0) {
+                    orders.push({
+                        id: id,
+                        quantity: parseInt(quantity)
+                    });
+                }
+            });
+
+            if (orders.length === 0) {
+                alert('Please select at least one product quantity to order.');
+                return;
+            }
+
+            /* AJAX POST a rendelés leadásához */
+            $.ajax({
+                url: '/products/order',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(orders),
+                success: function (response) {
+                    alert('Order placed successfully!');
+                    location.reload(); // oldal frissítése, hogy látszódjon az updated available tickets
+                },
+                error: function () {
+                    alert('Error occurred while placing order.');
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

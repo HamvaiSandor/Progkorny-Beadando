@@ -3,6 +3,7 @@ package org.example.cart;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exception.NoSuchProductException;
 import org.example.model.Cart;
+import org.example.model.OrderEntity;
 import org.example.model.Product;
 import org.example.orderconfirm.Observer;
 import org.example.repository.OrderRepository;
@@ -14,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -22,53 +24,45 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final Cart cart;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
-    private final List<Observer> observers = new ArrayList<>();
+    private final List<Observer> observers;
 
     @Autowired
     public ShoppingCartServiceImpl(Cart cart, ProductRepository productRepository, OrderRepository orderRepository, List<Observer> observers) {
         this.cart = cart;
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
-        this.observers.addAll(observers);
+        this.observers = (observers != null) ? observers : new ArrayList<>(); // ✔ Biztosítjuk, hogy ne legyen null
     }
-
-    List<Observer> observersTemp2;
-
-    @Autowired
-    public void setObserversTemp2(List<Observer> observersTemp2) {
-        this.observersTemp2 = observersTemp2;
-    }
-
-    @Autowired
-    List<Observer> observersTemp;
 
     @PostConstruct
     public void populate() {
-        log.info("Shopping cart initialized successfully.");
+        log.info("Shopping cart initialized successfully with {} observers.", observers.size());
     }
 
     @PreDestroy
     public void cleanUp() {
-        log.info("Shopping cart cleanup process started.");
+        log.info("Shopping cart cleanup process started. Remaining products in cart: {}", cart.getProducts().size());
     }
 
     @Override
     public void order() {
-        orderRepository.saveOrder(cart);
-        log.info("Order placed. Total price: {}", getTotalPrice());
+        OrderEntity order = new OrderEntity(cart.getCustomerName(), cart.getProducts());
+        orderRepository.save(order);
+
+        log.info("Order placed. Total price: {} $, Number of items: {}", getTotalPrice(), cart.getProducts().size());
         observers.forEach(observer -> observer.notify(cart));
         cart.clearCart();
     }
 
     @Override
     public void addProduct(String productName, int quantity) throws NoSuchProductException {
-        Product productToAdd = productRepository.findAllProducts()
+        Product productToAdd = productRepository.findAll()
                 .stream()
-                .filter(product -> product.name().equals(productName))
+                .filter(product -> product.getName().equals(productName))
                 .findFirst()
                 .orElseThrow(NoSuchProductException::new);
         cart.addProduct(productToAdd);
-        log.info("Added product to cart: {}", productName);
+        log.info("Added product to cart: {} (Quantity: {})", productName, quantity);
     }
 
     @Override
@@ -79,11 +73,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void removeProduct(final Product productToRemove) {
         cart.removeProduct(productToRemove);
+        log.info("Removed product from cart: {}", productToRemove.getName());
     }
 
     @Override
     public double getTotalPrice() {
-        return cart.getProducts().stream().mapToDouble(Product::price).sum();
+        return cart.getProducts().stream().mapToDouble(Product::getPrice).sum();
     }
 
     @Override
@@ -94,5 +89,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void listProducts() {
+        cart.getProducts().forEach(product ->
+                log.info("Product in cart: {} ({} tickets) - {} Ft", product.getName(), product.getAvailableTickets(), product.getPrice())
+        );
     }
 }
