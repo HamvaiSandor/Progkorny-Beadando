@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -49,8 +48,12 @@ public class OrderEntity {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof OrderEntity)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof OrderEntity)) {
+            return false;
+        }
         OrderEntity other = (OrderEntity) obj;
         return id != null && id.equals(other.id);
     }

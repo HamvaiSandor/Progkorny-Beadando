@@ -10,7 +10,8 @@ import java.util.List;
 public interface ShoppingCartService {
     void order();
     double getTotalPrice();
-    void addProduct(String productName, int quantity) throws NoSuchProductException;
+    void addProduct(String productName, int quantity)
+            throws NoSuchProductException;
     List<Product> getProductsFromCart();
     void removeProduct(Product productToRemove);
     void subscribe(Observer observer);

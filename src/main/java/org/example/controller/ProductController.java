@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
@@ -49,13 +48,15 @@ public class ProductController {
     @PostMapping("/edit")
     public String updateProduct(@ModelAttribute SimpleProduct product) {
         productRepository.save(product);
-        return "redirect:/products/list"; // Redirect to updated /books/list after updating
+        return "redirect:/products/list";
+        // Redirect to updated /books/list after updating
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productRepository.deleteById(id);
-        return "redirect:/products/list"; // Redirect to /authors/list after deleting
+        return "redirect:/products/list";
+        // Redirect to /authors/list after deleting
     }
 
     @GetMapping("/create")
@@ -71,14 +72,17 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String addProduct(@ModelAttribute("product") SimpleProduct simpleProduct) {
+    public String addProduct(@ModelAttribute("product")
+                                 SimpleProduct simpleProduct) {
         productRepository.save(simpleProduct); // új rekord, ha id == null
         return "redirect:/products/list";
     }
 
     @PostMapping("/order")
     @ResponseBody
-    public ResponseEntity<String> orderProducts(@RequestBody List<Map<String, Object>> orders) {
+    public ResponseEntity<String> orderProducts(
+            @RequestBody
+            List<Map<String, Object>> orders) {
         for (Map<String, Object> order : orders) {
             Long id = Long.valueOf(order.get("id").toString());
             int quantity = Integer.parseInt(order.get("quantity").toString());

@@ -9,10 +9,15 @@ import java.util.stream.Collectors;
 @Component
 public class SimpleCart implements Cart {
     private final String customerName;
-    private final List<Product> products = new ArrayList<>();
+    private final List<Product>
+            products = new ArrayList<>();
 
-    public SimpleCart(String customerName) { // ✔ Ügyfél név átadása
-        this.customerName = customerName != null ? customerName : "Unknown Customer"; // Alapértelmezett érték
+    public SimpleCart(String customerName) {
+        // ✔ Ügyfél név átadása
+        this.customerName = customerName != null
+                ?
+                customerName : "Unknown Customer";
+        // Alapértelmezett érték
     }
 
     @Override
@@ -47,6 +52,8 @@ public class SimpleCart implements Cart {
 
     @Override
     public String toString() {
-        return "SimpleCart{" + products.stream().map(Object::toString).collect(Collectors.joining(", ")) + '}';
+        return "SimpleCart{" + products.stream().map(
+                Object::toString).collect(
+                        Collectors.joining(", ")) + '}';
     }
 }
