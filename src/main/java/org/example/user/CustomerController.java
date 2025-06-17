@@ -13,9 +13,9 @@ public class CustomerController {
         this.customerRepository = customerRepository;
     }
 
-    @GetMapping("/register")
-    public String showRegisterPage() {
-        return "register/submit";  // regisztrációs oldal megjelenítése
+    @GetMapping
+    public String showRegistrationForm() {
+        return "register"; // /register URL-re jön a sablon
     }
 
     @PostMapping
@@ -25,8 +25,8 @@ public class CustomerController {
             @RequestParam String password) {
 
         Customer newCustomer = new Customer(name, email, password);
-        customerRepository.save(newCustomer);  // mentés az adatbázisba
+        customerRepository.save(newCustomer);
 
-        return "redirect:/products/list";  // sikeres regisztráció után átirányítás
+        return "redirect:/register?success=true";
     }
 }

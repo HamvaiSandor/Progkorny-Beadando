@@ -35,7 +35,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
         this.observers = (observers != null) ? observers : new ArrayList<>();
-        // ✔ Biztosítjuk, hogy ne legyen null
     }
 
     @PostConstruct

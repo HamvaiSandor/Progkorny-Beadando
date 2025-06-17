@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @ComponentScan(basePackages = "org.example")
 @EnableJpaRepositories(basePackages = {
         "org.example.repository",
-        "org.example.user" // 🔧 Ezt kell hozzáadni!
+        "org.example.user"
 })
-@EntityScan(basePackages = "org.example") // 🔧 Szükséges, hogy az Entity osztályokat is lássa
+@EntityScan(basePackages = "org.example")
 public class AppConfig {
 
     @Bean
