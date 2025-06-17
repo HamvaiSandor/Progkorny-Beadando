@@ -26,5 +26,4 @@ public class SimpleProduct implements Product {
     private int availableTickets;
     private Double price;
 
-    // A gettereket a Lombok @Data automatikusan generálja
 }

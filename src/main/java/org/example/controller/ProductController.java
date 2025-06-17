@@ -61,7 +61,6 @@ public class ProductController {
     public String deleteProduct(@PathVariable Long id) {
         productRepository.deleteById(id);
         return "redirect:/products/list";
-        // Redirect to /authors/list after deleting
     }
 
     @GetMapping("/create")

@@ -9,5 +9,5 @@ public interface ProductService {
     SimpleProduct save(SimpleProduct product);
     Optional<SimpleProduct> findById(Long id);
     void deleteById(Long id);
-    List<SimpleProduct> findAll();  // <-- EZ HIÁNYZOTT
+    List<SimpleProduct> findAll();
 }

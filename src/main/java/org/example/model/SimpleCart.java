@@ -13,11 +13,9 @@ public class SimpleCart implements Cart {
             products = new ArrayList<>();
 
     public SimpleCart(String customerName) {
-        // ✔ Ügyfél név átadása
         this.customerName = customerName != null
                 ?
                 customerName : "Unknown Customer";
-        // Alapértelmezett érték
     }
 
     @Override
@@ -32,7 +30,7 @@ public class SimpleCart implements Cart {
 
     @Override
     public List<Product> getProducts() {
-        return new ArrayList<>(products); // Védelem a mutabilitás ellen
+        return new ArrayList<>(products);
     }
 
     @Override

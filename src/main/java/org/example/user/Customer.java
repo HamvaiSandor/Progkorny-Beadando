@@ -21,18 +21,15 @@ public class Customer {
     @Setter
     private String password;
 
-    // ✔ Üres konstruktor kötelező a JPA-nak
     public Customer() {
     }
 
-    // ✔ Konstruktor adatokkal
     public Customer(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    // Getterek
     public Long getId() {
         return id;
     }

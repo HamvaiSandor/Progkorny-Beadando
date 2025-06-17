@@ -31,7 +31,6 @@ public class OrderEntity {
         this.itemCount = products != null ? products.size() : 0;
     }
 
-    // ✔ Ez hiányzott: most már megy a ShoppingCartServiceImpl-ben
     public OrderEntity(UUID id, String customerName, int itemCount) {
         this.id = id;
         this.customerName = customerName;
