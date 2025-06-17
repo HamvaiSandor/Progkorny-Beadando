@@ -22,6 +22,11 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
+    @GetMapping("/index")
+    public String showIndexPage() {
+        return "products/index"; // Ez az index.html fájlra mutat
+    }
+
     @GetMapping
     public String redirectToList() {
         return "redirect:/products/list";
