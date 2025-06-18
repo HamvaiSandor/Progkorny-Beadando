@@ -1,25 +1,150 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Welcome to the Product Application</title>
+    <meta charset="UTF-8" />
+    <title>Index Page</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #2b2b2b;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 1400px;
+            width: 100%;
+            gap: 100px;
+            padding: 0 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        .side-images {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2; /* Biztosítja, hogy a szélső képek a középsőre ráfedjenek */
+        }
+
+        .side-images img {
+            width: 260px;
+            height: 190px;
+            border-radius: 10px;
+            box-shadow: 0 8px 14px rgba(0,0,0,0.6);
+            object-fit: cover;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+        }
+
+        /* Bal oldali képek forgatása */
+        .side-images.left img:first-child {
+            transform: rotate(-12deg);
+        }
+        .side-images.left img:last-child {
+            transform: rotate(9deg);
+        }
+
+        /* Jobb oldali képek forgatása */
+        .side-images.right img:first-child {
+            transform: rotate(10deg);
+        }
+        .side-images.right img:last-child {
+            transform: rotate(-14deg);
+        }
+
+        /* Középső nagy kép és tartalom */
+        .header-container {
+            height: 97vh; /* Eredeti méret + kb. 2 cm */
+            max-width: none; /* Eredeti 1100px + kb. 2 cm */
+            width: 1400px !important;
+            background-image: url('https://thumbs.dreamstime.com/b/iconic-colosseum-rome-italy-illuminated-night-city-lights-glowing-background-365463239.jpg?w=768');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 40px 20px 30px;
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 1; /* Háttérben marad a szélső képekhez képest */
+        }
+
+        .welcome-text {
+            font-size: 34px;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn {
+            font-size: 26px;
+            font-weight: bold;
+            padding: 18px 50px;
+            background: linear-gradient(to bottom, #30e3ca, #11999e);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 6px #0b6464;
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to bottom, #11999e, #0c7b87);
+            transform: translateY(-2px);
+            box-shadow: 0 8px #075e66;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 4px #075e66;
+        }
+    </style>
 </head>
 <body>
+
 <div class="container">
-    <div class="jumbotron mt-5">
-        <h1 class="display-4">Welcome to the Tickets!</h1>
-        <p class="lead">Manage your products easily.</p>
-        <hr class="my-4">
-        <p>Choose an option below to get started:</p>
-        <a class="btn btn-primary btn-lg" th:href="@{/products/list}" role="button">View Products</a>
-        <a class="btn btn-success btn-lg" th:href="@{/products/create}" role="button">Add New Product</a>
+    <div class="side-images left">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTY83bo-Qtfn_4XE2qD7XCHvtzBllg-msF_w&s" alt="Bal kép 1" />
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuCzbFn_hWchLbbdsQx5Mp2xf6uLpGDbExkw&s" alt="Bal kép 2" />
+    </div>
+
+    <div class="header-container">
+        <div class="welcome-text">Welcome to the Tickets website!</div>
+
+        <div class="button-container">
+            <a href="/products/list" class="btn" style="margin-right: 20px;">Events</a>
+            <a href="/register" class="btn">Register</a>
+        </div>
+    </div>
+
+    <div class="side-images right">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2vwAJO3wjczPf6Cu4bTu7GfCy3OihMBjiQg&s" alt="Jobb kép 1" />
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8BH1XKdB7v5vRRVNLNKXv3XXvYFqhCzyx0g&s" alt="Jobb kép 2" />
     </div>
 </div>
+
 </body>
 </html>

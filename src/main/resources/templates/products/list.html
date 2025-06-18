@@ -5,47 +5,208 @@
     <title>Product List</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        html, body {
+            background-color: #30e3ca;
+        }
 
+        #orderButton {
+            float: right;
+            margin-top: 15px;
+        }
+
+        input[type=number] {
+            width: 70px;
+        }
+
+        #loginSection {
+            position: absolute;
+            top: 15px;
+            right: 30px;
+            text-align: right;
+        }
+
+        #loginSection input {
+            margin: 2px;
+        }
+
+        #welcomeMessage {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-top: 30px;
+        }
+
+        #pageTitle {
+            text-align: left;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            font-size: 2rem;
+            color: black;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h1 class="mt-5 mb-4">Product List</h1>
+
+    <!-- Bejelentkezés / kijelentkezés -->
+    <div id="loginSection">
+        <input type="text" id="usernameInput" class="form-control" placeholder="Username">
+        <input type="password" id="passwordInput" class="form-control" placeholder="Password">
+        <button id="loginButton" class="btn btn-primary btn-sm">Login</button>
+        <button id="logoutButton" class="btn btn-danger btn-sm" style="display:none;">Logout</button>
+    </div>
+
+    <!-- Welcome felirat -->
+    <div id="welcomeMessage" style="display:none;"></div>
+
+    <!-- Oldalcím -->
+    <h1 id="pageTitle">Product List</h1>
+
+    <!-- Terméktábla -->
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
         <tr>
-            <th>ID</th>
             <th>Name</th>
             <th>Sector</th>
             <th>Date</th>
             <th>Available Tickets</th>
             <th>Price</th>
-            <th>Actions</th>
+            <th>Cart</th>
+            <th>Pay ($)</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products}">
-        <td th:text="${product.id}">1</td>
-        <td th:text="${product.name}">Product Name</td>
-        <td th:text="${product.sector}">Sector</td>
-        <td th:text="${product.date}">Date</td>
-        <td th:text="${product.AvailableTickets}">0</td>
-        <td th:text="${product.price}">0.0</td>
-        <td>
-                <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-primary btn-sm">Edit</a>
-                <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm"
-                   onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+        <tr th:each="product : ${products}" th:id="'row-' + ${product.id}">
+            <td th:text="${product.name}">Product Name</td>
+            <td th:text="${product.sector}">Sector</td>
+            <td th:text="${product.date}">Date</td>
+            <td th:text="${product.availableTickets}" th:id="'available-' + ${product.id}">0</td>
+            <td th:text="${product.price}">0.0</td>
+            <td>
+                <input type="number" min="0" th:id="'qty-' + ${product.id}" placeholder="" />
             </td>
+            <td th:id="'total-' + ${product.id}">0 $</td>
         </tr>
         </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="6" class="text-right font-weight-bold">Total pay:</td>
+            <td id="grandTotal" class="font-weight-bold">0 $</td>
+        </tr>
+        </tfoot>
     </table>
+
+    <button id="orderButton" class="btn btn-success">Order</button>
 </div>
+
+<!-- JS -->
 <script>
-    $(document).ready(function(){
-        console.log("Product list loaded");
+    function updateTotals() {
+        let grandTotal = 0;
+        $('tbody tr').each(function () {
+            const row = $(this);
+            const id = row.attr('id').replace('row-', '');
+            const qty = parseInt($('#qty-' + id).val());
+            const price = parseFloat(row.find('td:nth-child(5)').text());
+
+            if (!isNaN(qty) && qty > 0) {
+                const total = qty * price;
+                $('#total-' + id).text(total.toFixed(2) + ' $');
+                grandTotal += total;
+            } else {
+                $('#total-' + id).text('0 $');
+            }
+        });
+        $('#grandTotal').text(grandTotal.toFixed(2) + ' $');
+    }
+
+    $(document).ready(function () {
+        $('#orderButton').click(function () {
+            let orders = [];
+
+            $('tbody tr').each(function () {
+                const row = $(this);
+                const id = row.attr('id').replace('row-', '');
+                const qtyInput = $('#qty-' + id);
+                const qty = parseInt(qtyInput.val());
+
+                if (!isNaN(qty) && qty > 0) {
+                    const availableEl = $('#available-' + id);
+                    let available = parseInt(availableEl.text());
+
+                    if (qty <= available) {
+                        orders.push({id: id, quantity: qty});
+                    } else {
+                        alert('You cannot order more tickets than available for product ID: ' + id);
+                        qtyInput.val('');
+                    }
+                }
+            });
+
+            if (orders.length === 0) {
+                alert('Please enter quantities to order.');
+                return;
+            }
+
+            $.ajax({
+                url: '/products/order',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(orders),
+                success: function (response) {
+                    orders.forEach(function(order) {
+                        const availableEl = $('#available-' + order.id);
+                        let currentAvailable = parseInt(availableEl.text());
+                        availableEl.text(currentAvailable - order.quantity);
+                        $('#qty-' + order.id).val('');
+                        $('#total-' + order.id).text('0 $');
+                    });
+                    updateTotals();
+                    alert('Order placed successfully!');
+                },
+                error: function () {
+                    alert('Error processing your order. Please try again.');
+                }
+            });
+        });
+
+        $('input[type=number]').on('input', updateTotals);
+
+        $('input[type=number]').on('keydown', function(e) {
+            if (e.key === 'ArrowDown') {
+                let val = $(this).val();
+                if (val === '1') {
+                    e.preventDefault();
+                    $(this).val('');
+                    updateTotals();
+                }
+            }
+        });
+
+        // Bejelentkezés
+        $('#loginButton').click(function () {
+            const username = $('#usernameInput').val();
+            const password = $('#passwordInput').val();
+            if (username && password) {
+                $('#welcomeMessage').text(`Welcome ${username}!`).show();
+                $('#usernameInput, #passwordInput, #loginButton').hide();
+                $('#logoutButton').show();
+            }
+        });
+
+        // Kijelentkezés
+        $('#logoutButton').click(function () {
+            $('#welcomeMessage').hide().text('');
+            $('#usernameInput, #passwordInput, #loginButton').show();
+            $('#logoutButton').hide();
+            $('#usernameInput').val('');
+            $('#passwordInput').val('');
+        });
     });
 </script>
 </body>

@@ -1,15 +1,29 @@
 package org.example.model;
 
-import lombok.Builder;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Builder
-public record SimpleProduct(
-        Long id,
-        String date,
-        String name,
-        String sector,
-        int AvailableTickets,
-        Double price
-)
-        implements Product {
+@Entity
+@Table(name = "products")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SimpleProduct implements Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String date;
+    private String name;
+    private String sector;
+    private int availableTickets;
+    private Double price;
+
 }

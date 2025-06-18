@@ -1,17 +1,10 @@
 package org.example.model;
 
 public interface Product {
-
-    Long id();
-
-    String date();
-
-    String name();
-
-    String sector();
-
-    int AvailableTickets();
-
-    Double price();
-
+    Long getId();
+    String getDate();
+    String getName();
+    String getSector();
+    int getAvailableTickets();
+    Double getPrice();
 }

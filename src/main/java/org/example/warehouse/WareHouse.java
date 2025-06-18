@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class WareHouse implements Observer {
-    private static final Logger log = LoggerFactory.getLogger(WareHouse.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WareHouse.class);
 
     @Override
     public void notify(Cart cart) {
@@ -19,6 +19,6 @@ public class WareHouse implements Observer {
     }
 
     public void registerOrderedProducts(List<Product> products) {
-        log.info("Products registered in warehouse: {}", products);
+        LOG.info("Products registered in warehouse: {}", products);
     }
 }

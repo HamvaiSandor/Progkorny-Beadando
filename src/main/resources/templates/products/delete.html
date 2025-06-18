@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Termék törlése</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Termék törlése</h1>
+
+<form th:action="@{/delete/{id}}" method="get">
+    <label for="id">Termék azonosítója (ID):</label>
+    <input type="number" id="id" name="id" required>
+
+    <button type="submit">Törlés</button>
+</form>
+
+<div>
+    <a th:href="@{/products/list}">Vissza a terméklistához</a>
+</div>
+</body>
+</html>

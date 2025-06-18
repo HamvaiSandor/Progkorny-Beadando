@@ -1,48 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Product</title>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>Termék szerkesztése</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-<div class="container">
-    <h1 class="mt-5 mb-4">Edit Product</h1>
-    <form th:action="@{/products/update}" th:object="${product}" method="post">
+<div class="container mt-5">
+    <h2 class="mb-4">Termék szerkesztése</h2>
+    <form th:action="@{/products/update}" th:object="${product}" method="post" class="row g-3">
+        <!-- Rejtett mező az ID-hez -->
         <input type="hidden" th:field="*{id}" />
 
-        <div class="form-group">
-            <label for="date">Date</label>
-            <input type="text" th:field="*{date}" class="form-control" id="date" placeholder="Enter product date" required />
+        <div class="col-md-6">
+            <label for="name" class="form-label">Név</label>
+            <input type="text" th:field="*{name}" class="form-control" id="name" required>
         </div>
 
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Enter product name" required />
+        <div class="col-md-6">
+            <label for="sector" class="form-label">Szekció</label>
+            <input type="text" th:field="*{sector}" class="form-control" id="sector" required>
         </div>
 
-        <div class="form-group">
-            <label for="sector">Sector</label>
-            <input type="text" th:field="*{sector}" class="form-control" id="sector" placeholder="Enter product sector" required />
+        <div class="col-md-6">
+            <label for="date" class="form-label">Dátum</label>
+            <input type="date" th:field="*{date}" class="form-control" id="date" required>
         </div>
 
-        <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" th:field="*{price}" class="form-control" id="price" placeholder="Enter product price" step="0.01" required />
+        <div class="col-md-6">
+            <label for="price" class="form-label">Ár ($)</label>
+            <input type="number" th:field="*{price}" class="form-control" id="price" min="0" step="0.01" required>
         </div>
 
-        <div class="form-group">
-            <label for="AvailableTickets">Available Tickets</label>
-            <input type="number" th:field="*{AvailableTickets}" class="form-control" id="AvailableTickets" placeholder="Enter AvailableTickets" min="0" required />
+        <div class="col-md-6">
+            <label for="availableTickets" class="form-label">Elérhető jegyek</label>
+            <input type="number" th:field="*{availableTickets}" class="form-control" id="availableTickets" min="0" required>
         </div>
 
-        <button type="submit" class="btn btn-success">Save</button>
-        <a th:href="@{/products/list}" class="btn btn-secondary">Cancel</a>
+        <div class="text-center mt-4">
+            <form th:action="@{'/products/delete/' + ${product.id}}" method="post">
+                <button type="submit" class="btn btn-danger">Törlés</button>
+            </form>
+        </div>
+
+        <div class="col-12 d-flex justify-content-between mt-4">
+            <a th:href="@{/products/list}" class="btn btn-secondary">Mégse</a>
+            <button type="submit" class="btn btn-success">Mentés</button>
+        </div>
     </form>
 </div>
 </body>

@@ -1,7 +1,10 @@
 package org.example.repository;
 
-import org.example.model.Cart;
+import org.example.model.OrderEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OrderRepository {
-    void saveOrder(Cart cart);
-}
+import java.util.UUID;
+
+@Repository
+public interface OrderRepository extends JpaRepository<OrderEntity, UUID> { }
