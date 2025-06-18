@@ -13,4 +13,5 @@ public interface ShoppingCartService {
     List<Product> getProductsFromCart();
     void removeProduct(Product productToRemove);
     void subscribe(Observer observer);
+    void listProducts();
 }
